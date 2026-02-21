@@ -1,16 +1,16 @@
-# Python cache
+# Python bytecode
 __pycache__/
 *.pyc
 
-# Virtual environment
+# Virtual environments
 venv/
 env/
 
-# VS Code settings
+# VS Code settings folder
 .vscode/
 
-# OS files
+# macOS files
 .DS_Store
 
-# Results screenshots (optional)
+# Results images/screenshots folder
 results/*.png
