@@ -1,55 +1,44 @@
-import sys
-sys.setrecursionlimit(20000)
-
-import random
 import time
-import copy
+import random
+import csv
+import statistics
+import sys
+
 from quicksort_deterministic import quicksort as deterministic_quicksort
 from quicksort_randomized import randomized_quicksort
 
+sys.setrecursionlimit(20000)
 
-def generate_random_array(size):
-    return [random.randint(0, 100000) for _ in range(size)]
+def benchmark_version(func, arr, trials=10):
+    times = []
+    for _ in range(trials):
+        arr_copy = arr.copy()
+        start = time.perf_counter()
+        func(arr_copy, 0, len(arr_copy) - 1)
+        end = time.perf_counter()
+        times.append(end - start)
+    return statistics.mean(times), statistics.stdev(times)
 
+input_sizes = [1000, 5000, 10000]
 
-def generate_sorted_array(size):
-    return list(range(size))
+distributions = {
+    "random": lambda n: [random.randint(0, n) for _ in range(n)],
+    "sorted": lambda n: list(range(n)),
+    "reverse": lambda n: list(range(n, 0, -1))
+}
 
+with open("results/quicksort_bench.csv", "w", newline="") as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(["version", "distribution", "n", "avg_time", "std_dev"])
 
-def generate_reverse_sorted_array(size):
-    return list(range(size, 0, -1))
+    for n in input_sizes:
+        for name, gen in distributions.items():
+            base = gen(n)
 
+            avg_det, std_det = benchmark_version(deterministic_quicksort, base)
+            writer.writerow(["deterministic", name, n, avg_det, std_det])
 
-def measure_time(sort_function, arr):
-    start = time.perf_counter()
-    sort_function(arr, 0, len(arr) - 1)
-    end = time.perf_counter()
-    return end - start
+            avg_rand, std_rand = benchmark_version(randomized_quicksort, base)
+            writer.writerow(["randomized", name, n, avg_rand, std_rand])
 
-
-def run_experiment():
-    sizes = [1000, 5000, 10000]
-    distributions = {
-        "Random": generate_random_array,
-        "Sorted": generate_sorted_array,
-        "Reverse Sorted": generate_reverse_sorted_array,
-    }
-
-    for size in sizes:
-        print(f"\nArray Size: {size}")
-        for name, generator in distributions.items():
-            base_array = generator(size)
-
-            arr1 = copy.deepcopy(base_array)
-            arr2 = copy.deepcopy(base_array)
-
-            det_time = measure_time(deterministic_quicksort, arr1)
-            rand_time = measure_time(randomized_quicksort, arr2)
-
-            print(f"{name} Input:")
-            print(f"  Deterministic: {det_time:.6f} seconds")
-            print(f"  Randomized   : {rand_time:.6f} seconds")
-
-
-if __name__ == "__main__":
-    run_experiment()
+print("Benchmark completed. Results saved to results/quicksort_bench.csv")
