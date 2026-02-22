@@ -1,44 +1,80 @@
-import time
 import random
+import time
 import csv
 import statistics
-import sys
 
-from quicksort_deterministic import quicksort as deterministic_quicksort
+from quicksort_deterministic import quicksort
 from quicksort_randomized import randomized_quicksort
 
-sys.setrecursionlimit(20000)
 
-def benchmark_version(func, arr, trials=10):
-    times = []
-    for _ in range(trials):
-        arr_copy = arr.copy()
-        start = time.perf_counter()
-        func(arr_copy, 0, len(arr_copy) - 1)
-        end = time.perf_counter()
-        times.append(end - start)
-    return statistics.mean(times), statistics.stdev(times)
+def generate_array(n, case_type="random"):
+    if case_type == "random":
+        return [random.randint(0, 100000) for _ in range(n)]
+    elif case_type == "sorted":
+        return list(range(n))
+    elif case_type == "reverse":
+        return list(range(n, 0, -1))
+    else:
+        raise ValueError("Unknown case type")
 
-input_sizes = [1000, 5000, 10000]
 
-distributions = {
-    "random": lambda n: [random.randint(0, n) for _ in range(n)],
-    "sorted": lambda n: list(range(n)),
-    "reverse": lambda n: list(range(n, 0, -1))
-}
+def measure_time(sort_function, arr):
+    start = time.perf_counter()
+    sort_function(arr)
+    end = time.perf_counter()
+    return end - start
 
-with open("results/quicksort_bench.csv", "w", newline="") as csvfile:
-    writer = csv.writer(csvfile)
-    writer.writerow(["version", "distribution", "n", "avg_time", "std_dev"])
 
-    for n in input_sizes:
-        for name, gen in distributions.items():
-            base = gen(n)
+def run_experiment():
+    sizes = [1000, 2000, 5000, 10000]
+    cases = ["random", "sorted", "reverse"]
+    trials = 10
 
-            avg_det, std_det = benchmark_version(deterministic_quicksort, base)
-            writer.writerow(["deterministic", name, n, avg_det, std_det])
+    with open("results/results.csv", mode="w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([
+            "Size",
+            "Case",
+            "Algorithm",
+            "Average Time (s)",
+            "Std Dev (s)"
+        ])
 
-            avg_rand, std_rand = benchmark_version(randomized_quicksort, base)
-            writer.writerow(["randomized", name, n, avg_rand, std_rand])
+        for n in sizes:
+            for case in cases:
 
-print("Benchmark completed. Results saved to results/quicksort_bench.csv")
+                det_times = []
+                rand_times = []
+
+                for _ in range(trials):
+                    arr = generate_array(n, case)
+
+                    arr1 = arr.copy()
+                    arr2 = arr.copy()
+
+                    det_times.append(measure_time(quicksort, arr1))
+                    rand_times.append(measure_time(randomized_quicksort, arr2))
+
+                writer.writerow([
+                    n,
+                    case,
+                    "Deterministic",
+                    statistics.mean(det_times),
+                    statistics.stdev(det_times)
+                ])
+
+                writer.writerow([
+                    n,
+                    case,
+                    "Randomized",
+                    statistics.mean(rand_times),
+                    statistics.stdev(rand_times)
+                ])
+
+                print(f"Completed n={n}, case={case}")
+
+    print("\nResults saved to results/results.csv")
+
+
+if __name__ == "__main__":
+    run_experiment()

@@ -3,6 +3,10 @@ Deterministic Quicksort Implementation
 MSCS 532 - Assignment 5
 Based on CLRS (4th Edition), Chapter 7
 """
+import sys
+sys.setrecursionlimit(20000)
+
+from typing import List
 
 def partition(arr, low, high):
     """
@@ -23,13 +27,17 @@ def partition(arr, low, high):
     return i + 1
 
 
-def quicksort(arr, low, high):
+def quicksort(arr, low=0, high=None):
     """
-    Recursive Quicksort algorithm.
+    In-place deterministic quicksort.
+    Automatically handles empty arrays.
     """
+
+    if high is None:
+        high = len(arr) - 1
+
     if low < high:
         pi = partition(arr, low, high)
-
         quicksort(arr, low, pi - 1)
         quicksort(arr, pi + 1, high)
 

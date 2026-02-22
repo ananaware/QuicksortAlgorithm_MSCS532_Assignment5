@@ -1,148 +1,166 @@
-\# MSCS 532 – Assignment 5  
+# Quicksort Algorithm: Implementation, Analysis, and Randomization  
+MSCS 532 – Algorithms and Data Structures  
+University of the Cumberlands  
 
-\## Quicksort Implementation, Analysis, and Randomization  
+---
+
+## Overview
+
+This project implements both deterministic and randomized versions of the Quicksort algorithm in Python. It includes:
+
+- Theoretical time and space complexity analysis
+- Empirical performance comparison
+- Statistical evaluation (average and standard deviation)
+- Analysis of the impact of randomization
+
+The implementation is based on concepts from:
+
+> Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2022). *Introduction to Algorithms* (4th ed.). MIT Press.
+
+---
+
+## Project Structure
 
 
-
-This repository contains the implementation and analysis of deterministic and randomized Quicksort algorithms as part of MSCS 532 – Algorithms and Data Structures.
-
+MSCS532_Assignment5_Quicksort/
+│
+├── src/
+│ ├── quicksort_deterministic.py
+│ ├── quicksort_randomized.py
+│ └── benchmark.py
+│
+├── results/
+│ └── results.csv
+│
+├── report/
+│ └── Assignment_Report.pdf
+│
+├── tests/
+│ └── test_quicksort.py
+│
+└── README.md
 
 
 ---
 
+##  Implementation Details
 
+### Deterministic Quicksort
+- Uses Lomuto partition scheme
+- Pivot = last element
+- Worst-case behavior on sorted/reverse-sorted inputs
 
-\## Repository Structure
+### Randomized Quicksort
+- Random pivot selection
+- Reduces probability of worst-case O(n²)
+- Maintains expected O(n log n)
 
+---
+
+## Empirical Analysis
+
+Each experiment was executed:
+
+- 10 independent trials
+- For input sizes: 1000, 2000, 5000, 10000
+- For input types:
+  - Random
+  - Sorted
+  - Reverse Sorted
+
+For each configuration, we computed:
+
+- Average running time
+- Standard deviation
+
+Results are saved in:
 ```bash
 
-src/
 
-quicksort\_deterministic.py
-
-quicksort\_randomized.py
-
-benchmark.py
-
-
-
-report/
-
-MSCS532\_Assignment5\_Quicksort\_Report.pdf
-
-
-
-results/
-
-Screenshots of outputs and benchmark results
-
+results/results.csv
 ```
 
+---
+
+## Sample Output
+
+Example benchmark execution:
+
+
+Completed n=1000, case=random
+Completed n=1000, case=sorted
+Completed n=1000, case=reverse
+...
+Results saved to results/results.csv
+
+
+Example CSV output:
+
+
+Size,Case,Algorithm,Average Time (s),Std Dev (s)
+1000,random,Deterministic,0.00121,0.00008
+1000,random,Randomized,0.00118,0.00005
 
 
 ---
 
+##  Key Observations
 
-
-\## Implementations
-
-
-
-\### Deterministic Quicksort
-
-\- Uses Lomuto partition scheme
-
-\- Last element selected as pivot
-
-\- Based on CLRS Chapter 7
-
-
-
-\### Randomized Quicksort
-
-\- Random pivot selection
-
-\- Reduces likelihood of worst-case behavior
-
-\- Expected time complexity: O(n log n)
-
-
+1. Deterministic Quicksort performs efficiently on random inputs.
+2. Deterministic Quicksort degrades significantly on sorted inputs.
+3. Deep recursion was observed for sorted input, reflecting worst-case O(n²).
+4. Randomized Quicksort maintained stable performance across all input types.
+5. Standard deviation values confirmed lower performance variability for randomized Quicksort.
 
 ---
 
+## 📈Theoretical Alignment
 
+- Best Case: O(n log n)
+- Average Case: O(n log n)
+- Worst Case: O(n²)
+- Space Complexity (average): O(log n)
+- Space Complexity (worst): O(n)
 
-\## How to Run
+Empirical results strongly align with theoretical analysis from CLRS (2022).
 
+---
 
+## ▶️ How to Run
 
-From the project root directory:
+From project root:
 
-
-
-Run deterministic version:
-
+### Run Edge Case Tests
 ```bash
 
-python src/quicksort\_deterministic.py
-
+python edge_case_check.py
 ```
 
-
-
-Run randomized version:
-
-```bash
-
-python src/quicksort\_randomized.py
-
-```
-
-
-
-Run empirical benchmark:
-
+### Run Benchmark
 ```bash
 
 python src/benchmark.py
-
 ```
 
+Results will be saved to:
+```bash
+results/results.csv
 
+```
+---
+
+## What I Learned
+
+Through this assignment, I learned:
+
+- How pivot selection directly impacts recursion depth
+- Why worst-case O(n²) is not just theoretical but observable
+- How randomization improves algorithmic stability
+- The importance of running multiple trials and computing statistical measures
+- How empirical data supports theoretical complexity analysis
 
 ---
 
+## Reference
 
-
-\## Key Findings
-
-
-
-\- Deterministic Quicksort performs efficiently on random input.
-
-\- It degrades to O(n²) on sorted and reverse-sorted input.
-
-\- Randomized Quicksort maintains expected O(n log n) performance across all tested input types.
-
-\- Experimental results strongly align with theoretical analysis from CLRS (2022).
-
-
-
----
-
-
-
-\## Reference
-
-
-
-Cormen, T. H., Leiserson, C. E., Rivest, R. L., \& Stein, C. (2022). \*Introduction to Algorithms\* (4th ed.). MIT Press.
-
-
-
-
-
-
-
-
-
+Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2022). *Introduction to Algorithms*

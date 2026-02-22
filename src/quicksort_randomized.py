@@ -3,8 +3,11 @@ Randomized Quicksort Implementation
 MSCS 532 - Assignment 5
 Based on CLRS (4th Edition), Chapter 7
 """
+import sys
+sys.setrecursionlimit(20000)
 
 import random
+from typing import List
 
 
 def partition(arr, low, high):
@@ -28,14 +31,18 @@ def randomized_partition(arr, low, high):
     arr[random_index], arr[high] = arr[high], arr[random_index]
     return partition(arr, low, high)
 
+def randomized_quicksort(arr, low=0, high=None):
+    """
+    In-place randomized quicksort.
+    """
 
-def randomized_quicksort(arr, low, high):
+    if high is None:
+        high = len(arr) - 1
+
     if low < high:
         pi = randomized_partition(arr, low, high)
-
         randomized_quicksort(arr, low, pi - 1)
         randomized_quicksort(arr, pi + 1, high)
-
 
 if __name__ == "__main__":
     sample = [10, 7, 8, 9, 1, 5]
