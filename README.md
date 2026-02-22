@@ -50,6 +50,8 @@ MSCS532_Assignment5_Quicksort/
 - Pivot = last element
 - Worst-case behavior on sorted/reverse-sorted inputs
 
+- Deterministic pivot strategy: always selects the last element
+
 ### Randomized Quicksort
 - Random pivot selection
 - Reduces probability of worst-case O(n²)
@@ -114,7 +116,7 @@ Size,Case,Algorithm,Average Time (s),Std Dev (s)
 
 ---
 
-## 📈Theoretical Alignment
+## Theoretical Alignment
 
 - Best Case: O(n log n)
 - Average Case: O(n log n)
@@ -126,7 +128,14 @@ Empirical results strongly align with theoretical analysis from CLRS (2022).
 
 ---
 
-## ▶️ How to Run
+### Why O(n log n) vs O(n²)?
+
+Quicksort achieves O(n log n) time when partitions are balanced, meaning each recursive call splits the array into roughly two equal halves. This results in log n recursion depth with O(n) work per level.
+
+In the worst case, when the pivot always produces highly unbalanced partitions (e.g., sorted input with last-element pivot), the recursion depth becomes n, leading to O(n²) total comparisons. This behavior was empirically observed during benchmarking.
+---
+
+## How to Run
 
 From project root:
 
